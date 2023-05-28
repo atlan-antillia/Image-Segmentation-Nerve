@@ -135,6 +135,9 @@ ultrasound-nerve-segmentation
 The <b>train</b> folder of this dataset contains the ordinary image files and mask files.<br>
 We dont' touch image files in <b>test</b> folder, because it has only ordinary image files, no
 mask files.<br>
+<b>ultrasound-nerve-segmentation_train_samples:</b><br>
+<img src="./asset/ultrasound-nerve-segmentation_train_samples.png" width="1024" height="auto">
+<br>
 <h3>
 2.3.2. Generate Nerve Image Dataset
 </h3>
@@ -271,7 +274,7 @@ On detail of these functions, please refer to <a href="./losses.py">losses.py</a
 We have also used Python <a href="./NerveDataset.py">NerveDataset.py</a> script to create
 train and test dataset from the images and masks specified by
 <b>image_datapath</b> and <b>mask_datapath </b> parameters in the configratration file.<br>
-The training process has just been stopped at epoch 30 by an early-stopping callback as shown below.<br><br>
+The training process has just been stopped at epoch 20 by an early-stopping callback as shown below.<br><br>
 <img src="./asset/train_console_at_epoch_20_0528.png" width="720" height="auto"><br>
 <br>
 The <b>val_accuracy</b> is very high as shown below from the beginning of the training.<br>
@@ -362,3 +365,118 @@ Some green tumor regions in the original images of the mini_test dataset above h
 
 <b>Merged Inferred images (mini_test_output_meraged)</b><br>
 <img src="./asset/mini_test_output_merged.png" width="1024" height="auto"><br><br>
+<br>
+<h2>
+6 Train TensorflowUNet Model with basnet_hybrid_loss
+</h2>
+ We have also trained Nerve TensorflowUNet Model by using the following
+ <b>train_eval_infer_basnet_hybrid_loss.config</b> file. <br>
+Please run the following bat file.<br>
+<pre>
+>4.train.bat
+</pre>
+, which simply runs the following command.<br>
+<pre>
+>python ./TensorflowUNetNerveTrainer.py train_eval_infer_basnet_hybrid_loss.config
+</pre>
+This python script above will read the following configration file, build TensorflowUNetModel, and
+start training the model by using 
+<pre>
+; train_eval_infer_basnet_hybrid_loss.config
+; 2023/5/28 antillia.com
+; Modified to use loss
+; Specify
+; loss         = "basnet_hybrid_loss"
+
+
+[model]
+image_width    = 256
+image_height   = 256
+
+image_channels = 3
+num_classes    = 1
+base_filters   = 16
+num_layers     = 6
+dropout_rate   = 0.08
+learning_rate  = 0.001
+dilation       = (2, 2)
+loss         = "basnet_hybrid_loss"
+metrics      = ["dice_coef", "sensitivity", "specificity"]
+show_summary   = False
+
+[train]
+epochs        = 100
+batch_size    = 4
+patience      = 10
+metrics       = ["dice_coef", "val_dice_coef"]
+model_dir     = "./basnet_models"
+eval_dir      = "./basnet_eval"
+
+image_datapath = "./Nerve/train/images/"
+mask_datapath  = "./Nerve/train/masks/"
+
+[eval]
+image_datapath = "./Nerve/test/images/"
+mask_datapath  = "./Nerve/test/masks/"
+
+[infer] 
+images_dir    = "./mini_test" 
+output_dir    = "./basnet_mini_test_output"
+merged_dir    = "./basnet_mini_test_output_merged"
+</pre>
+<b>image_datapath</b> and <b>mask_datapath </b> parameters in the configratration file.<br>
+The training process has just been stopped at epoch 30 by an early-stopping callback as shown below.<br><br>
+<img src="./asset/train_basnet_console_at_epoch_30_0528.png" width="720" height="auto"><br>
+<br>
+The <b>val_accuracy</b> is very high as shown below from the beginning of the training.<br>
+<b>Train accuracies line graph</b>:<br>
+<img src="./asset/basnet_train_metrics_at_epoch_30_0528.png" width="720" height="auto"><br>
+
+<br>
+The val_loss is also very low as shown below from the beginning of the training.<br>
+<b>Train losses line graph</b>:<br>
+<img src="./asset/basnet_train_losses_at_epoch_30_0528.png" width="720" height="auto"><br>
+
+<--
+ -->
+ 
+
+<h2>
+7 Evaluation with basnet_hybrid_loss
+</h2>
+ We have evaluated prediction accuracy of our Pretrained Nerve Model by using <b>test</b> dataset.
+Please run the following bat file.<br>
+<pre>
+>2.evalute.bat
+</pre>
+, which simply run the following command.<br>
+<pre>
+>python TensorflowUNetNerveEvaluator.py
+</pre>
+The evaluation result of this time is the following.<br>
+<img src="./asset/evaluate_basnet_console_at_epoch_30_0528.png" width="720" height="auto"><br>
+<br>
+
+<h2>
+8 Inference with basnet_hybrid_loss
+</h2>
+We have also tried to infer the segmented region for <b>mini_test</b> dataset, which is a very small dataset including only ten images extracted from <b>test</b> dataset,
+ by using our Pretrained Nerve Model.<br>
+<pre>
+>3.infer.bat
+</pre>
+, which simply runs the following command.<br>
+<pre>
+>python TensorflowUNetNerveInfer.py
+</pre>
+
+<b>Input images (mini_test) </b><br>
+<img src="./asset/mini_test.png" width="1024" height="auto"><br>
+<br>
+<b>Infered images (basnet_mini_test_output)</b><br>
+Some green tumor regions in the original images of the mini_test dataset above have been detected as shown below.
+<img src="./asset/basnet_mini_test_output.png" width="1024" height="auto"><br><br>
+
+<b>Merged Inferred images (basnet_mini_test_output_meraged)</b><br>
+<img src="./asset/basnet_mini_test_output_merged.png" width="1024" height="auto"><br><br>
+<br>
