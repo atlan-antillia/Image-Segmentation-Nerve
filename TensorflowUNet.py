@@ -198,7 +198,11 @@ class TensorflowUNet:
     patience   = self.config.get(TRAIN, "patience")
     eval_dir   = self.config.get(TRAIN, "eval_dir")
     model_dir  = self.config.get(TRAIN, "model_dir")
-
+    metrics    = ["accuracy", "val_accuracy"]
+    try:
+      metrics    = self.config.get(TRAIN, "metrics")
+    except:
+      pass
     if os.path.exists(model_dir):
       shutil.rmtree(model_dir)
 
@@ -208,7 +212,7 @@ class TensorflowUNet:
 
     early_stopping = EarlyStopping(patience=patience, verbose=1)
     check_point    = ModelCheckpoint(weight_filepath, verbose=1, save_best_only=True)
-    epoch_change   = EpochChangeCallback(eval_dir)
+    epoch_change   = EpochChangeCallback(eval_dir, metrics)
 
     history = self.model.fit(x_train, y_train, 
                     validation_split=0.2, batch_size=batch_size, epochs=epochs, 
