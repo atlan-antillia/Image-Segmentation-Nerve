@@ -144,7 +144,7 @@ mask files.<br>
  <pre>
  1 Resize all tif files in <b>ultrasound-nerve-segmentation/train</b> folder to 256x256 square image.
  2 Split image and mask files in <b>ultrasound-nerve-segmentation/train</b> folder into train and test
-  for out model.<br>
+  for our model.<br>
 </pre>
 
 <!--
@@ -359,3 +359,6 @@ Some green tumor regions in the original images of the mini_test dataset above h
 </table>
 <!--
 -->
+
+<b>Merged Inferred images (mini_test_output_meraged)</b><br>
+<img src="./asset/mini_test_output_merged.png" width="1024" height="auto"><br><br>
