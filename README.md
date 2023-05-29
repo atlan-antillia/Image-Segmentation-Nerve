@@ -437,8 +437,6 @@ The val_loss is also very low as shown below from the beginning of the training.
 <b>Train losses line graph</b>:<br>
 <img src="./asset/basnet_train_losses_at_epoch_30_0528.png" width="720" height="auto"><br>
 
-<--
- -->
  
 
 <h2>
@@ -447,11 +445,11 @@ The val_loss is also very low as shown below from the beginning of the training.
  We have evaluated prediction accuracy of our Pretrained Nerve Model by using <b>test</b> dataset.
 Please run the following bat file.<br>
 <pre>
->2.evalute.bat
+>5.evalute.bat
 </pre>
 , which simply run the following command.<br>
 <pre>
->python TensorflowUNetNerveEvaluator.py
+>python TensorflowUNetNerveEvaluator.py train_eval_infer_basnet_hybrid_loss.config
 </pre>
 The evaluation result of this time is the following.<br>
 <img src="./asset/evaluate_basnet_console_at_epoch_30_0528.png" width="720" height="auto"><br>
@@ -463,11 +461,11 @@ The evaluation result of this time is the following.<br>
 We have also tried to infer the segmented region for <b>mini_test</b> dataset, which is a very small dataset including only ten images extracted from <b>test</b> dataset,
  by using our Pretrained Nerve Model.<br>
 <pre>
->3.infer.bat
+>6.infer.bat
 </pre>
 , which simply runs the following command.<br>
 <pre>
->python TensorflowUNetNerveInfer.py
+>python TensorflowUNetNerveInfer.py train_eval_infer_basnet_hybrid_loss.config
 </pre>
 
 <b>Input images (mini_test) </b><br>
