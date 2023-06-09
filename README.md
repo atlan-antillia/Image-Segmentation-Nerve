@@ -117,7 +117,7 @@ Please run the following command to install python packages for this project.<br
 <h3>
 2.3.1. Download 
 </h3>
-Please download original <b>Multiple Myeloma Plasma Cells</b> dataset from the following link.
+Please download original <b>Ultrasound Nerve Segmentation</b> dataset from the following link.
 <br>
 <b>
  Ultrasound Nerve Segmentation<br>
